@@ -32,7 +32,6 @@ const AutoCounter = () => {
 
   // 🕒 Controls
   const start = () => {
-    // ✅ Unlock voice on iPhone with a manual user gesture
     if (!voiceEnabled) {
       const unlock = new SpeechSynthesisUtterance("Voice enabled");
       window.speechSynthesis.speak(unlock);
@@ -57,22 +56,23 @@ const AutoCounter = () => {
     if (counter > 0) speakNumber(counter);
   }, [counter]);
 
-  // 🧼 Button style
-  const buttonStyle = {
+  // 🧼 Button base styles
+  const buttonBase = {
     border: "none",
     borderRadius: "50px",
     padding: "15px 40px",
     color: "#fff",
-    fontSize: "1.2rem",
+    fontSize: "1.1rem",
     fontWeight: 600,
     cursor: "pointer",
     transition: "0.3s",
+    flex: "1 1 120px", // allows wrapping nicely
   };
 
   return (
     <div
       style={{
-        height: "100vh",
+        minHeight: "100vh",
         background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
         display: "flex",
         flexDirection: "column",
@@ -81,36 +81,57 @@ const AutoCounter = () => {
         color: "#fff",
         fontFamily: "'Poppins', sans-serif",
         textAlign: "center",
-        gap: "2rem",
         padding: "20px",
       }}
     >
-      <h1 style={{ textShadow: "0 0 20px rgba(0,255,255,0.5)" }}>
+      <h1
+        style={{
+          fontSize: "2rem",
+          marginBottom: "20px",
+          textShadow: "0 0 20px rgba(0,255,255,0.5)",
+        }}
+      >
         AI Voice Counter
       </h1>
 
       <div
         style={{
-          fontSize: "7rem",
+          fontSize: "6rem",
           fontWeight: 700,
           color: "#00ffff",
           textShadow: "0 0 30px #00ffff",
+          marginBottom: "30px",
         }}
       >
         {counter}
       </div>
 
       {!voiceEnabled && (
-        <p style={{ fontSize: "1rem", opacity: 0.7 }}>
+        <p
+          style={{
+            fontSize: "0.9rem",
+            opacity: 0.8,
+            marginBottom: "20px",
+          }}
+        >
           🔇 Tap <strong>Start</strong> once to enable voice on iPhone
         </p>
       )}
 
-      <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: "15px",
+          width: "100%",
+          maxWidth: "400px",
+        }}
+      >
         <button
           onClick={start}
           style={{
-            ...buttonStyle,
+            ...buttonBase,
             background: "linear-gradient(135deg, #00c6ff, #0072ff)",
             boxShadow: "0 0 20px rgba(0,255,255,0.4)",
           }}
@@ -121,7 +142,7 @@ const AutoCounter = () => {
         <button
           onClick={stop}
           style={{
-            ...buttonStyle,
+            ...buttonBase,
             background: "linear-gradient(135deg, #ff416c, #ff4b2b)",
             boxShadow: "0 0 20px rgba(255,0,0,0.4)",
           }}
@@ -132,7 +153,7 @@ const AutoCounter = () => {
         <button
           onClick={reset}
           style={{
-            ...buttonStyle,
+            ...buttonBase,
             background: "linear-gradient(135deg, #11998e, #38ef7d)",
             boxShadow: "0 0 20px rgba(0,255,0,0.4)",
           }}
