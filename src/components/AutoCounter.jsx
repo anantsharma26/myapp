@@ -6,7 +6,7 @@ const AutoCounter = () => {
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const intervalRef = useRef(null);
 
-  // 🎙️ Load voices when available
+  // 🎙️ Load voices
   useEffect(() => {
     const loadVoices = () => {
       const voices = window.speechSynthesis.getVoices();
@@ -37,7 +37,6 @@ const AutoCounter = () => {
       window.speechSynthesis.speak(unlock);
       setVoiceEnabled(true);
     }
-
     if (intervalRef.current) return;
     intervalRef.current = setInterval(() => setCounter((c) => c + 1), 2000);
   };
@@ -56,17 +55,17 @@ const AutoCounter = () => {
     if (counter > 0) speakNumber(counter);
   }, [counter]);
 
-  // 🧼 Button base styles
   const buttonBase = {
     border: "none",
     borderRadius: "50px",
-    padding: "15px 40px",
+    padding: "14px 35px",
     color: "#fff",
-    fontSize: "1.1rem",
+    fontSize: "clamp(1rem, 3vw, 1.2rem)",
     fontWeight: 600,
     cursor: "pointer",
     transition: "0.3s",
-    flex: "1 1 120px", // allows wrapping nicely
+    width: "100%",
+    maxWidth: "250px",
   };
 
   return (
@@ -81,12 +80,13 @@ const AutoCounter = () => {
         color: "#fff",
         fontFamily: "'Poppins', sans-serif",
         textAlign: "center",
-        padding: "20px",
+        padding: "30px 20px",
+        boxSizing: "border-box",
       }}
     >
       <h1
         style={{
-          fontSize: "2rem",
+          fontSize: "clamp(1.5rem, 5vw, 2.5rem)",
           marginBottom: "20px",
           textShadow: "0 0 20px rgba(0,255,255,0.5)",
         }}
@@ -96,11 +96,12 @@ const AutoCounter = () => {
 
       <div
         style={{
-          fontSize: "6rem",
+          fontSize: "clamp(4rem, 20vw, 7rem)",
           fontWeight: 700,
           color: "#00ffff",
           textShadow: "0 0 30px #00ffff",
-          marginBottom: "30px",
+          marginBottom: "25px",
+          lineHeight: 1.2,
         }}
       >
         {counter}
@@ -109,9 +110,9 @@ const AutoCounter = () => {
       {!voiceEnabled && (
         <p
           style={{
-            fontSize: "0.9rem",
+            fontSize: "clamp(0.8rem, 2.5vw, 1rem)",
             opacity: 0.8,
-            marginBottom: "20px",
+            marginBottom: "25px",
           }}
         >
           🔇 Tap <strong>Start</strong> once to enable voice on iPhone
@@ -121,11 +122,11 @@ const AutoCounter = () => {
       <div
         style={{
           display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "center",
           gap: "15px",
           width: "100%",
-          maxWidth: "400px",
+          maxWidth: "300px",
         }}
       >
         <button
