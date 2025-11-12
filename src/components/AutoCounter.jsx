@@ -3,26 +3,25 @@ import React, { useRef, useState, useEffect } from "react";
 const AutoCounter = () => {
   const [counter, setCounter] = useState(0);
   const [voice, setVoice] = useState(null);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
   const intervalRef = useRef(null);
 
-  // 🎙️ Load voices before starting
+  // 🎙️ Load voices when available
   useEffect(() => {
     const loadVoices = () => {
       const voices = window.speechSynthesis.getVoices();
-      const ukMale =
+      const selected =
         voices.find((v) => v.name === "Google UK English Male") ||
-        voices.find((v) => v.name.includes("UK English")) ||
         voices.find((v) => v.lang === "en-GB") ||
         voices[0];
-      setVoice(ukMale);
+      setVoice(selected);
     };
-
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
   }, []);
 
   const speakNumber = (num) => {
-    if (!voice) return; // Wait until voice loads
+    if (!voiceEnabled || !voice) return;
     const utterance = new SpeechSynthesisUtterance(String(num));
     utterance.voice = voice;
     utterance.rate = 0.9;
@@ -33,6 +32,13 @@ const AutoCounter = () => {
 
   // 🕒 Controls
   const start = () => {
+    // ✅ Unlock voice on iPhone with a manual user gesture
+    if (!voiceEnabled) {
+      const unlock = new SpeechSynthesisUtterance("Voice enabled");
+      window.speechSynthesis.speak(unlock);
+      setVoiceEnabled(true);
+    }
+
     if (intervalRef.current) return;
     intervalRef.current = setInterval(() => setCounter((c) => c + 1), 2000);
   };
@@ -47,12 +53,11 @@ const AutoCounter = () => {
     setCounter(0);
   };
 
-  // 🔁 Speak whenever counter changes
   useEffect(() => {
-    if (counter > 0 && voice) speakNumber(counter);
-  }, [counter, voice]);
+    if (counter > 0) speakNumber(counter);
+  }, [counter]);
 
-  // 🧼 Button styles
+  // 🧼 Button style
   const buttonStyle = {
     border: "none",
     borderRadius: "50px",
@@ -77,6 +82,7 @@ const AutoCounter = () => {
         fontFamily: "'Poppins', sans-serif",
         textAlign: "center",
         gap: "2rem",
+        padding: "20px",
       }}
     >
       <h1 style={{ textShadow: "0 0 20px rgba(0,255,255,0.5)" }}>
@@ -93,6 +99,12 @@ const AutoCounter = () => {
       >
         {counter}
       </div>
+
+      {!voiceEnabled && (
+        <p style={{ fontSize: "1rem", opacity: 0.7 }}>
+          🔇 Tap <strong>Start</strong> once to enable voice on iPhone
+        </p>
+      )}
 
       <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
         <button
